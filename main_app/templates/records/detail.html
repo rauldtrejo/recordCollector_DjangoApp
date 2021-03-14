@@ -3,14 +3,101 @@
 
 <h1>Record Details</h1>
 
-<div class="card">
-  <div class="card-content">
-    <span class="card-title">{{ record.name }}</span>
-    <p>Artist: {{ record.artist }}</p>
-    <p>Description: {{ record.description }}</p>
-    <p>Genre: {{record.genre }}</p>
-    <p>Released: {{record.released}}</p>
+<div class="row">
+  <div class="col s6">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">{{ record.name }}</span>
+        <p>Artist: {{ record.artist }}</p>
+        <p>Description: {{ record.description }}</p>
+        <p>Genre: {{record.genre }}</p>
+        <p>Released: {{record.released}}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col s6">
+  <form class='white' action="{% url 'add_played' record.id %}" method="post">
+    {% csrf_token %}
+    {{ played_form.as_p }}
+    <input type="submit" class="btn" value="Log A Reproduction">
+  </form>
+    <table class="striped white">
+      <thead>
+        <tr><th>Date</th><th>Maintenance</th></tr>
+      </thead>
+      <tbody>
+        {% for maintenance in record.played_set.all %}
+          <tr>
+            <td>{{maintenance.date}}</td>
+            <td>{{maintenance.get_maintenance_display}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </div>
+
+<!-- This is all new markup to be added just above the <script> tag -->
+<hr>
+<div class="row">
+  <div class="col s6">
+    <h3>{{ record.name }}'s Cleaning Brushes</h3>
+    {% if record.cleaning_brush.count %}
+      {% for cleaning_brush in record.cleaning_brush.all %}
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">
+              {{cleaning_brush.brand}} {{cleaning_brush.name}}
+            </span>
+          </div>
+           <div class="card-action">
+              <form action="{% url 'remove_cleaning_brush' record.id cleaning_brush.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn">Remove</button>
+              </form>
+            </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <h5>No Cleaning Brushes :(</h5>
+    {% endif %}
+  </div>
+  <!-- Available toys will come after this line -->
+    <div class="col s6">
+      <h3>Available Cleaning Brushes</h3>
+    {% if cleaning_brush.count %}
+      {% for cleaning_brush in cleaning_brush.all %}
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title">
+              {{cleaning_brush.brand}} {{cleaning_brush.name}}
+            </span>
+          </div>
+          <div class="card-action">
+            <form action="{% url 'assoc_cleaning_brush' record.id cleaning_brush.id %}" method="post">
+              {% csrf_token %}
+              <button type="submit" class="btn">Add</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <h5>{{cat.name}} Already Has All The Cleaning Brushes</h5>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  const dateEl = document.getElementById('id_date');
+  M.Datepicker.init(dateEl, {
+    format: 'yyyy-mm-dd',
+    defaultDate: new Date(),
+    setDefaultDate: true,
+    autoClose: true
+  });
+   // add additional JS to initialize select below
+  const selectEl = document.getElementById('id_maintenance');
+  M.FormSelect.init(selectEl);
+</script>   
 
 {% endblock %}
