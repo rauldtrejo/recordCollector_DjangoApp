@@ -1,9 +1,8 @@
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
-from .models import CleaningBrush, Played, Record
+from .models import CleaningBrush, Record
 from .forms import PlayedForm, RecordForm
 
 # Create your views here.
@@ -14,10 +13,12 @@ def home(request):
 def about(request):
     return render(request, 'about.html')
 
+@login_required
 def records_index(request):
   records = Record.objects.filter(user=request.user)
   return render(request, 'records/index.html', { 'records':records})
 
+@login_required
 def records_detail(request, record_id):
   record = Record.objects.get(id=record_id)
   played_form = PlayedForm()
@@ -25,6 +26,7 @@ def records_detail(request, record_id):
   cleaning_brushes_record_doesnt_have = CleaningBrush.objects.exclude(id__in = record.cleaning_brush.all().values_list('id'))
   return render(request, 'records/detail.html', {'record':record, 'played_form':played_form, 'cleaning_brush': cleaning_brushes_record_doesnt_have})
 
+@login_required
 def add_played(request, record_id):
   form = PlayedForm(request.POST)
   if form.is_valid():
@@ -33,14 +35,17 @@ def add_played(request, record_id):
     new_played.save()
   return redirect ('detail', record_id=record_id)
 
+@login_required
 def assoc_cleaning_brush(request, record_id, cleaning_brush_id):
   Record.objects.get(id=record_id).cleaning_brush.add(cleaning_brush_id)
   return redirect('detail', record_id=record_id)
 
+@login_required
 def remove_cleaning_brush(request, record_id, cleaning_brush_id):
     Record.objects.get(id=record_id).cleaning_brush.remove(cleaning_brush_id)
     return redirect('detail', record_id=record_id)
 
+@login_required
 def add_record(request):
  record_form = RecordForm(request.POST or None)
   # if the form was posted and valid
@@ -73,5 +78,25 @@ def signup(request):
   form = UserCreationForm()
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
+
+@login_required
+def records_delete(request, record_id):
+  Record.objects.get(id=record_id).delete()
+  return redirect('index')
+
+
+@login_required
+def records_edit(request, record_id):
+  # get a reference to a cat
+  record = Record.objects.get(id=record_id)
+  # build a form for the cat filling it with values from the instance or values from the POST request
+  record_form = RecordForm(request.POST or None, instance=record)
+  if request.POST and record_form.is_valid():
+    # save changes to the cat
+    record_form.save()
+    # redirect to the detail page
+    return redirect('detail', record_id=record_id)
+  else:
+    return render(request, 'records/edit.html', { 'record': record, 'record_form': record_form })
 
 

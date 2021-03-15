@@ -30,13 +30,13 @@ footer {
   text-align: right;
 }
 
-form{
-  padding: 10px !important;
-}
-
 h5{
  	color: black;
    font-size: 30px;
 	-webkit-text-stroke: 1px black !important;
 	-webkit-text-fill-color: white !important;
+}
+
+form.white{
+  padding: 10px;
 }
