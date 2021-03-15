@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h3>Cleaning Equipment and Products</h3>
+
+{% for equipment in equipment %}
+    <div class="card">
+        <div class="card-content">
+            <span class="card-title">{{ equipment.brand }}</span>
+            <p>Product: {{ equipment.name }}</p>
+        </div>
+        <form class='right-align' method="POST" action="{% url 'delete_equipment' equipment.id %}">
+            {% csrf_token %}
+            <input type="submit" class="btn" value="Delete" />
+        </form>
+    </div>
+{% endfor %}
+
+{% endblock %}

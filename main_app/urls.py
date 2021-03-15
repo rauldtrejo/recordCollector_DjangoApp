@@ -13,6 +13,9 @@ urlpatterns = [
     path('records/<int:record_id>/remove_cleaning_brush/<int:cleaning_brush_id>/', views.remove_cleaning_brush, name='remove_cleaning_brush'),
     path('records/add_record/', views.add_record, name='add_record'),
     path('records/<int:record_id>/delete/', views.records_delete, name='delete'),
-    path('records/<int:record_id>/edit/', views.records_edit, name='edit')
+    path('records/<int:record_id>/edit/', views.records_edit, name='edit'),
+    path('cleaning_equipment/add_product', views.add_cleaning_product, name='add_cleaning_product'),
+    path('cleaning_equipment/', views.cleaning_equipment_index, name='cleaning_products'),
+    path('cleaning_equipment/<int:equipment_id>/delete', views.cleaning_equipment_delete, name='delete_equipment')
 ]
 

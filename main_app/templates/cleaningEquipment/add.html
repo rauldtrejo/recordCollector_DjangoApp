@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h3>Add Cleaning Equipment To Your Collection</h3>
+<div>
+  <form class='white' method="POST" action="{% url 'add_cleaning_product' %}">
+    {% csrf_token %}
+    {{ cleaning_form.as_p }}
+    <input type="submit" class="btn" value="Add Cleaning Equipment">
+  </form>
+  </div>
+{% endblock content %}

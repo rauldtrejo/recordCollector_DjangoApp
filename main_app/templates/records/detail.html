@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block content %}
 
-<h1>Record Details</h1>
+<h3>Record Details</h3>
 
 <div class="row">
   <div class="col s6">
@@ -48,7 +48,7 @@
 <hr />
 <div class="row">
   <div class="col s6">
-    <h3>{{ record.name }}'s Cleaning Brushes</h3>
+    <h3>{{ record.name }}'s Cleaning Equipment</h3>
     {% if record.cleaning_brush.count %} 
     {% for cleaning_brush in record.cleaning_brush.all %}
     <div class="card">
@@ -69,12 +69,12 @@
     </div>
     {% endfor %} 
     {% else %}
-    <h5>No Cleaning Brushes :(</h5>
+    <h5>No Cleaning Equipment :(</h5>
     {% endif %}
   </div>
   <!-- Available cleaning brushes will come after this line -->
   <div class="col s6">
-    <h3>Available Cleaning Brushes</h3>
+    <h3>Available Cleaning Equipment</h3>
     {% if cleaning_brush.count %} {% for cleaning_brush in cleaning_brush.all %}
     <div class="card">
       <div class="card-content">
@@ -93,7 +93,7 @@
       </div>
     </div>
     {% endfor %} {% else %}
-    <h5>{{cat.name}} Already Has All The Cleaning Brushes</h5>
+    <h5>{{cat.name}} No more cleaning Equipment Left</h5>
     {% endif %}
   </div>
 </div>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Record Library</h1>
+<h3>Record Library</h3>
 
 {% for record in records %}
   <div class="card">
@@ -15,6 +15,10 @@
         <p>Released: {{record.released}} </p>
       </div>
     </a>
+     <form class='right-align' method="POST" action="{% url 'delete' record.id %}">
+        {% csrf_token %}
+        <input type="submit" class="btn" value="Delete" />
+     </form>
   </div>
 {% endfor %}
 

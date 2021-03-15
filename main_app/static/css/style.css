@@ -37,6 +37,12 @@ h5{
 	-webkit-text-fill-color: white !important;
 }
 
+h1{
+ 	color: black;
+	-webkit-text-stroke: 1px black !important;
+	-webkit-text-fill-color: white !important;
+}
+
 form.white{
   padding: 10px;
 }

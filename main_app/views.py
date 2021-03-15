@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login
 from .models import CleaningBrush, Record
-from .forms import PlayedForm, RecordForm
+from .forms import CleaningForm, PlayedForm, RecordForm
 
 # Create your views here.
 
@@ -58,7 +58,7 @@ def add_record(request):
     return redirect('index')
  else:
     # render the page with the new cat form
-    return render(request, 'records/create.html', { 'record_form': record_form })
+    return render(request, 'records/add.html', { 'record_form': record_form })
 
 def signup(request):
   error_message = ''
@@ -99,4 +99,27 @@ def records_edit(request, record_id):
   else:
     return render(request, 'records/edit.html', { 'record': record, 'record_form': record_form })
 
+@login_required
+def add_cleaning_product(request):
+  cleaning_form = CleaningForm(request.POST or None)
+  # if the form was posted and valid
+  if request.POST and cleaning_form.is_valid():
+    # save new instance of a cat
+    cleaning_form.save(commit=True)
+    # redirect to index
+    return redirect('cleaning_products')
+  else:
+    # render the page with the new cat form
+    return render(request, 'cleaningEquipment/add.html', { 'cleaning_form': cleaning_form })
+
+
+@login_required
+def cleaning_equipment_index(request):
+  equipment = CleaningBrush.objects.all()
+  return render(request, 'cleaningEquipment/index.html', { 'equipment':equipment})
+
+@login_required
+def cleaning_equipment_delete(request, equipment_id):
+  CleaningBrush.objects.get(id=equipment_id).delete()
+  return redirect('cleaning_products')
 
